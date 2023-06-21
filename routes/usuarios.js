@@ -6,7 +6,7 @@ import {check } from "express-validator"*/
 const { check } = require('express-validator');
 
 const { validarCampos } = require('../middlewares/validate-fields');
-const { isRoleValid, isEmailValid } = require('../helpers/db-validators');
+const { isRoleValid, isEmailValid, userExistsById } = require('../helpers/db-validators');
 
 const { usuariosGet, 
         usuariosPost, 
@@ -33,7 +33,12 @@ router.post('/', [
         validarCampos
 ], usuariosPost );
 
-router.put('/:id', usuariosPut);
+router.put('/:id', [
+        check('id', 'No es un ID válido').isMongoId(),
+        check('id').custom( userExistsById ),
+        check('role').custom( isRoleValid),
+        validarCampos
+],usuariosPut);
 
 router.patch('/', usuariosPatch);
 

@@ -16,7 +16,16 @@ const isEmailValid = async (email = '')=> {
     }
 }
 
+const userExistsById = async ( id )=> {
+    //Verificar si el correo existe
+    const existeUsuario = await Usuario.findById( id );
+    if ( !existeUsuario ) {
+        throw new Error('El usuario de id: ' + id + ' no existe');
+    }
+}
+
 module.exports = { //exporta un objeto
     isEmailValid,
-    isRoleValid
+    isRoleValid,
+    userExistsById
 }
