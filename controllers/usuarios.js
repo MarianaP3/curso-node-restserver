@@ -1,4 +1,10 @@
 const { response, request } = require('express');
+const bcryptjs = require('bcryptjs');
+const { validationResult } = require('express-validator');
+
+const Usuario = require('../models/usuario');
+const ValidarCampos = require('../middlewares/validate-fields');
+
 
 
 const usuariosGet = (req = request, res = response) => { //la ruta se está estableciendo en server, al llamar
@@ -15,14 +21,28 @@ const usuariosGet = (req = request, res = response) => { //la ruta se está esta
     });
 }
 
-const usuariosPost = (req, res = response) => {
+async function usuariosPost(req, res = response) {
 
-    const { nombre, edad } = req.body;
+    const {name, last_name, email, password, role, occupation, about_user, img, status} = req.body;
+    const usuario = new Usuario({name, last_name, email, password, role, occupation, about_user, img, status});
 
-    res.status(201).json({
-        msg: 'post API - usuariosPost',
-        nombre, 
-        edad
+    //Verificar si el correo existe
+    const existeEmail = await Usuario.findOne({ email: email });
+    if ( existeEmail ) {
+        return res.status(400).json({
+            msg: 'Ese correo ya está registrado'
+        });
+    }
+
+    //Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync( password, salt );
+
+    //Guardar en la base de Datos
+    await usuario.save();
+
+    res.json({
+        usuario
     });
 }
 
