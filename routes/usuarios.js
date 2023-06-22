@@ -5,7 +5,7 @@ import {check } from "express-validator"*/
 // CommonJS
 const { check } = require('express-validator');
 
-const { validarCampos } = require('../middlewares/validate-fields');
+const { validarCampos/*,  validarSince, validarLimit*/} = require('../middlewares/validate-fields');
 const { isRoleValid, isEmailValid, userExistsById } = require('../helpers/db-validators');
 
 const { usuariosGet, 
@@ -16,7 +16,10 @@ const { usuariosGet,
 
 const router = Router();
 
-router.get('/', usuariosGet);
+router.get('/',/* [
+        validarSince,
+        validarLimit
+], */usuariosGet);
 
 router.post('/', [
         //middlewares
