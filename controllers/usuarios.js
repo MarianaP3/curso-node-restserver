@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 const { validationResult } = require('express-validator');
 
 const Usuario = require('../models/usuario');
-const {ValidarCampos, isLimitNotValid, isSinceNotValid, validarLimit, validarSince} = require('../middlewares/validate-fields');
+const {ValidarCampos, validarLimit, validarSince} = require('../middlewares/validate-fields');
 
 
 
@@ -11,17 +11,17 @@ const usuariosGet = async (req = request, res = response) => { //la ruta se est�
     
     const { limit = 5, since = 0} = req.query;
     const query = {status: true};
-
-    if(isNaN(limit) || limit<0 || isNaN(since) || since<0){
-        return res.status(400).json({ error: 'El valor de limit debe ser un número entero positivo.' });
-    }
-    const usuarios = await Usuario.find( query )
-        .skip( since )
-        .limit( limit );
-
-    const total = await Usuario.countDocuments(query);
+    
+    const [ total, usuarios ] = await Promise.all([
+        //Se ejecuta de manera simultánea
+        Usuario.countDocuments(query),
+        Usuario.find(query)
+            .skip( since )
+            .limit( limit )
+    ])
+    
     res.json({
-        total, 
+        total,
         usuarios
     });
 }
