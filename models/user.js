@@ -1,5 +1,6 @@
 
 const { Schema, model } = require('mongoose');
+const { appConfig } = require('../database/config');
 
 const UsuarioSchema = Schema({
     name: {
@@ -34,7 +35,7 @@ const UsuarioSchema = Schema({
     },
     img: {
         type: String,
-        required: [true, "La fotografía es requerida"]
+        //required: [true, "La fotografía es requerida"]
     },
     status: {
         type: Boolean,
@@ -43,7 +44,7 @@ const UsuarioSchema = Schema({
 });
 
 UsuarioSchema.methods.toJSON = function() {
-    const { __v, password, ...usuario} = this.toObject();
+    const { __v, password,  ...usuario} = this.toObject();
     return usuario;
 }
 

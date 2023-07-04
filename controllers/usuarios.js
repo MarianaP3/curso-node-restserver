@@ -2,7 +2,7 @@ const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
 const { validationResult } = require('express-validator');
 
-const Usuario = require('../models/usuario');
+const Usuario = require('../models/user');
 const {ValidarCampos, validarLimit, validarSince} = require('../middlewares/validate-fields');
 
 
@@ -13,7 +13,7 @@ const usuariosGet = async (req = request, res = response) => { //la ruta se estÃ
     const query = {status: true};
     
     const [ total, usuarios ] = await Promise.all([
-        //Se ejecuta de manera simultÃ¡nea
+        //It runs simultaneously
         Usuario.countDocuments(query),
         Usuario.find(query)
             .skip( since )
@@ -26,16 +26,50 @@ const usuariosGet = async (req = request, res = response) => { //la ruta se estÃ
     });
 }
 
+const getAuthorInfo =async (req = request, res = response) => {
+    //find an author by their id
+    const { id } = req.params;
+    const { __id, name, occupation, img, about_user, ...resto } = req.body;
+    
+    //extracts a fragment of about 50 characters of "about user" information
+    const aboutUserFragment = about_user.substring(0, 50);
+
+    res.json({
+        name,
+        occupation,
+        img, 
+        about_user: aboutUserFragment
+    });   
+}
+
 async function usuariosPost(req, res = response) {
 
-    const {name, last_name, email, password, role, occupation, about_user, img, status} = req.body;
-    const usuario = new Usuario({name, last_name, email, password, role, occupation, about_user, img, status});
+    const {name, 
+           last_name, 
+           email, 
+           password, 
+           role, 
+           occupation, 
+           about_user,
+           img,
+           status
+    } = req.body;
 
-    //Encriptar la contraseÃ±a
+    const usuario = new Usuario({name, 
+                                 last_name, 
+                                 email, 
+                                 password, 
+                                 role, 
+                                 occupation, 
+                                 about_user, 
+                                 img,
+                                 status});
+
+    //Encrypt the password
     const salt = bcryptjs.genSaltSync();
     usuario.password = bcryptjs.hashSync( password, salt );
 
-    //Guardar en la base de Datos
+    //Save in the database
     await usuario.save();
 
     res.json({
@@ -48,9 +82,9 @@ const usuariosPut = async (req, res = response) => {
     const { id } = req.params;
     const { _id, password, email, ...resto } = req.body;
 
-    // TO DO validar contra la base de datos
+    //Validate the passsword against the database
     if(password){
-        //Encriptar la contraseÃ±a
+        //Encrypt the password
         const salt = bcryptjs.genSaltSync();
         resto.password = bcryptjs.hashSync( password, salt );
 
@@ -67,10 +101,14 @@ const usuariosPatch = (req, res = response) => {
     });
 }
 
-const usuariosDelete = (req, res = response) => {
-    res.json({
-        msg: 'delete API - controlador'
-    });
+const usuariosDelete = async (req, res = response) => {
+    
+    const { id } = req.params;
+    //It uses SOFT delete due to the established terms
+    const usuario = await Usuario.findByIdAndUpdate( id, { status: false} );
+
+    
+    res.json( usuario );
 }
 
 module.exports = {
