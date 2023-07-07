@@ -33,7 +33,8 @@ router.post('/', [
   check('type', 'El tipo es obligatorio').not().isEmpty(),
   check('type').custom((type) => isTypeValid(type)),
   check('approved', 'El approved es obligatorio').not().isEmpty(),
-  // check('author', 'El autor es obligatorio').not().isEmpty(),
+  check('author', 'El autor es obligatorio').not().isEmpty(),
+  // revisar que el autor exista en la bd, crear middleware
   // check('image', 'La imagen es obligatoria').not().isEmpty()
   check('link').custom((link) => isLinkValid(link)),
   validarCampos
