@@ -29,6 +29,7 @@ router.post('/', [
   check('email').custom((email) => isEmailValid(email)),
   check('password', 'La contraseña es obligatoria').not().isEmpty(),
   check('password', 'La contraseña debe tener al menos 8 caracteres').isLength({ min: 8 }),
+  check('role', 'No es un rol válido').isIn('Author', 'Editor'),
   check('occupation', 'La ocupación es obligatoria').not().isEmpty(),
   check('about_user', 'La información sobre ti es obligatoria').not().isEmpty(),
   // check('img', 'La fotografía es obligatoria').not().isEmpty(),

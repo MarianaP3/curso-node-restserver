@@ -25,6 +25,22 @@ const isEmailValid = async (email = '') => {
   }
 }
 
+const isTitleValid = async (title = '') => {
+  // Verify if the title exists
+  const existeTitulo = await Contenido.findOne({ title })
+  if (existeTitulo) {
+    throw new Error('El titulo ´' + title + '´ ya está registrado ')
+  }
+}
+
+const isLinkValid = async (link = '') => {
+  // Verify if the link exists
+  const existeLink = await Contenido.findOne({ link })
+  if (existeLink) {
+    throw new Error('El link de el contenido que se desea crear ya está en uso')
+  }
+}
+
 const userExistsById = async (id) => {
   // Verify if the user exist by id
   const existeUsuario = await Usuario.findById(id)
@@ -46,5 +62,7 @@ module.exports = { // exports an object
   userExistsById,
   contentExistsById,
   isTopicValid,
-  isTypeValid
+  isTypeValid,
+  isTitleValid,
+  isLinkValid
 }

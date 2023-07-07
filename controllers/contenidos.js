@@ -37,10 +37,26 @@ const getContentsByTopic = async (req = request, res = response) => {
     contenidos
   })
 }
-const getContentsByStatus = async (req = request, res = response) => {
-  // Dynamic query for the content status (approved or not)
+const getApprovedContents = async (req = request, res = response) => {
+  // Query for the approved content
   const { limit = 10, since = 0 } = req.query
-  const query = { status: req.status }
+  const query = { approved: true }
+  // It runs simultaneously
+  const [total, contenidos] = await Promise.all([
+    Contenido.find(query)
+      .skip(since)
+      .limit(limit)
+  ])
+  res.json([
+    total,
+    contenidos
+  ])
+}
+
+const getNotApprovedContents = async (req = request, res = response) => {
+  // Query for the not approved content
+  const { limit = 10, since = 0 } = req.query
+  const query = { approved: false }
   // It runs simultaneously
   const [total, contenidos] = await Promise.all([
     Contenido.find(query)
@@ -87,9 +103,10 @@ const getContentApprovedBy = async (req = request, res = response) => {
 
 // AUTHOR PAGE
 const getContentApprovedCreatedBy = async (req = request, res = response) => {
-  // Dynamic query for the author who has created the content
+  // Query for the author who has created the content
+  // Can visualize their content approved
   const { limit = 10, since = 0 } = req.query
-  const query = { author: req.author, status: true }
+  const query = { author: req.author, approved: true }
   // It runs simultaneously
   const [total, contenidos] = await Promise.all([
     Contenido.find(query)
@@ -103,8 +120,9 @@ const getContentApprovedCreatedBy = async (req = request, res = response) => {
 }
 const getContentToBeApprovedCreatedBy = async (req = request, res = response) => {
   // Dynamic query for the editor who has approved the content
+  // Can visualize the content that has to be checked
   const { limit = 10, since = 0 } = req.query
-  const query = { author: req.author, status: false }
+  const query = { author: req.author, approved: false }
   // It runs simultaneously
   const [total, contenidos] = await Promise.all([
     Contenido.find(query)
@@ -125,7 +143,7 @@ async function contentsPost (req, res = response) {
     link,
     topic,
     type,
-    status,
+    approved,
     approved_by,
     author
 
@@ -138,7 +156,7 @@ async function contentsPost (req, res = response) {
     link,
     topic,
     type,
-    status,
+    approved,
     approved_by,
     author
   })
@@ -158,11 +176,10 @@ const contentsPut = async (req, res = response) => {
 }
 
 const approveContent = async (req, res = response) => {
-  // A content is approved when their status is true,
-  // when is not, false.
+  // A content is approved when approved it's true
   const { id } = req.params
   // Every content includes an id that identifies it
-  const content = await Contenido.findByIdAndUpdate(id, { status: req.status })
+  const content = await Contenido.findByIdAndUpdate(id, { approved: req.approved })
 
   res.json(content)
 }
@@ -170,7 +187,8 @@ const approveContent = async (req, res = response) => {
 module.exports = {
   getContentsByType,
   getContentsByTopic,
-  getContentsByStatus,
+  getApprovedContents,
+  getNotApprovedContents,
   getContentHiglight,
   getContentApprovedBy,
   getContentApprovedCreatedBy,

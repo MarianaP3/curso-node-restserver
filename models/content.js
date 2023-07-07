@@ -30,11 +30,11 @@ const ContentSchema = Schema({
     type: String,
     required: true
   },
-  status: {
+  approved: {
     type: Boolean,
     default: false
   },
-  /* Approved by: String (not required if status is false) */
+  /* Approved by: String (not required if isn't approved) */
   approved_by: {
     type: String // UserId
   },
