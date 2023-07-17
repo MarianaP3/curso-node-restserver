@@ -1,11 +1,17 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose'
+import { ROLES } from '../constants'
+/*
+const { Schema, model } = require('mongoose')
+const { ROLES } = require('../constants')
+*/
 
 const RoleSchema = Schema({
-    role: {
-        type: String,
-        required: [true, 'El rol es obligatorio']
-    }
-});
+  role: {
+    type: String,
+    required: [true, 'El rol es obligatorio'],
+    enum: Object.values(ROLES)
+  }
+})
 
-module.exports = model( 'Role', RoleSchema); 
+export default model('Role', RoleSchema)
 // solo se podrá acceder a el como 'Role'
