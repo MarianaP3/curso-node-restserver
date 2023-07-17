@@ -168,8 +168,9 @@ async function contentsPost (req, res = response) {
 
 const contentsPut = async (req, res = response) => {
   const { id } = req.params
-  const { __id, title, topic, type, ...resto } = req.body
-
+  const { __id, ...resto } = req.body
+  // let approved = false
+  // if an author changes their content, the content must be approved again by an editor
   const contenido = await Contenido.findByIdAndUpdate(id, resto)
 
   res.json(contenido)
@@ -183,6 +184,12 @@ const approveContent = async (req, res = response) => {
 
   res.json(content)
 }
+
+/* const deleteContent = async (req, res = response) => {
+  // Delete a content of the db
+
+  const { id } = req.params
+} */
 
 module.exports = {
   getContentsByType,

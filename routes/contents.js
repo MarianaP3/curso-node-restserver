@@ -2,7 +2,7 @@ const { Router } = require('express')
 const { check } = require('express-validator')
 
 const { validarCampos, validarSince, validarLimit } = require('../middlewares/validate-fields')
-const { contentExistsById, isTopicValid, isTypeValid, isTitleValid, isLinkValid } = require('../helpers/db-validators')
+const { contentExistsById, isTopicValid, isTypeValid, isTitleValid, isLinkValid, userExistsById } = require('../helpers/db-validators')
 
 const {
   getContentsByType,
@@ -35,6 +35,7 @@ router.post('/', [
   check('approved', 'El approved es obligatorio').not().isEmpty(),
   check('author', 'El autor es obligatorio').not().isEmpty(),
   // revisar que el autor exista en la bd, crear middleware
+  check('author').custom((author) => userExistsById(author)),
   // check('image', 'La imagen es obligatoria').not().isEmpty()
   check('link').custom((link) => isLinkValid(link)),
   validarCampos

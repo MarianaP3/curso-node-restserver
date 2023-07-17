@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 const { Schema, model } = require('mongoose')
+const { ROLES } = require('../constants')
 // const { appConfig } = require('../database/config')
 
 const UsuarioSchema = Schema({
@@ -22,8 +23,8 @@ const UsuarioSchema = Schema({
   },
   role: {
     type: String,
-    required: true,
-    enum: ['Editor', 'Author']
+    required: [true, 'El rol es obligatorio'],
+    enum: Object.values(ROLES)
   },
   occupation: {
     type: String,
@@ -35,7 +36,7 @@ const UsuarioSchema = Schema({
   },
   img: {
     type: String
-    // required: [true, "La fotografía es requerida"]
+    // required: [true, 'La fotografía es requerida']
   },
   status: {
     type: Boolean,

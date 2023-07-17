@@ -1,7 +1,10 @@
+// import { ConvertingTypesError } from '../errors'
+const IdDoesntExistError = require('../errors')
 const Usuario = require('../models/user')
 const Contenido = require('../models/content')
 const Topic = require('../models/topic')
 const Type = require('../models/type')
+const { ROLES } = require('../constants')
 
 const isTopicValid = async (topic = '') => {
   const existeTema = await Topic.findOne({ topic })
@@ -41,11 +44,24 @@ const isLinkValid = async (link = '') => {
   }
 }
 
+/**
+ * Verify if a user exists by its ID.
+ * @param {string} id ID del usuario.
+ */
 const userExistsById = async (id) => {
   // Verify if the user exist by id
   const existeUsuario = await Usuario.findById(id)
   if (!existeUsuario) {
-    throw new Error('El usuario de id: ' + id + ' no existe')
+    throw new IdDoesntExistError('Este ID no corresponde a ningún usuario')
+  }
+}
+
+const userIsAnAuthorById = async (id) => {
+  // Verify if the user is an Author by their ID
+  userExistsById(id)
+  const usuario = await Usuario.findById(id)
+  if (usuario.role !== ROLES.AUTHOR) {
+    throw new Error('El usuario de id: ' + id + ' no es un autor')
   }
 }
 
@@ -53,13 +69,14 @@ const contentExistsById = async (id) => {
   // Verify if the content exists by id
   const existeContenido = await Contenido.findById(id)
   if (!existeContenido) {
-    throw new Error('El contenido de id: ' + id + ' no existe')
+    throw new IdDoesntExistError('Este ID no corresponde a ningún contenido')
   }
 }
 
 module.exports = { // exports an object
   isEmailValid,
   userExistsById,
+  userIsAnAuthorById,
   contentExistsById,
   isTopicValid,
   isTypeValid,

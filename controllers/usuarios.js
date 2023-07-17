@@ -3,7 +3,9 @@ const { response, request } = require('express')
 const bcryptjs = require('bcryptjs')
 // const { validationResult } = require('express-validator')
 
+// const Usuario = require('../models/user').default
 const Usuario = require('../models/user')
+
 // const { ValidarCampos, validarLimit, validarSince } = require('../middlewares/validate-fields')
 
 const usuariosGet = async (req = request, res = response) => { // la ruta se está estableciendo en server, al llamar
@@ -80,7 +82,7 @@ async function usuariosPost (req, res = response) {
 
 const usuariosPut = async (req, res = response) => {
   const { id } = req.params
-  const { _id, password, email, ...resto } = req.body
+  const { _id, password, ...resto } = req.body
 
   // Validate the passsword against the database
   if (password) {

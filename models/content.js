@@ -36,10 +36,13 @@ const ContentSchema = Schema({
   },
   /* Approved by: String (not required if isn't approved) */
   approved_by: {
-    type: String // UserId
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   author: {
-    type: String,
+    // Receive only the ID, it doesn´t include the complete author, it´s not neccesary
+    type: Schema.Types.ObjectId,
+    ref: 'User', // It refers to users collection
     required: [true, 'El autor es obligatorio']
   }
 })
