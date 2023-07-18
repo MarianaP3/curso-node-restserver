@@ -1,11 +1,25 @@
 /* eslint-disable camelcase */
 const { response, request } = require('express')
-// const { validationResult } = require('express-validator')
 
 const Contenido = require('../models/content')
-// const { ValidarCampos, validarSince, validarLimit } = require('../middlewares/validate-fields')
 
-// MÉTODOS GET
+// GET METHODS
+const contentsGet = async (req = request, res = response) => {
+  const { limit = 5, since = 0 } = req.query
+  const query = { approved: true }
+
+  const [total, contenidos] = await Promise.all([
+    // It runs simultaneously
+    Contenido.countDocuments(query)
+      .skip(since)
+      .limit(limit)
+  ])
+
+  res.json({
+    total,
+    contenidos
+  })
+}
 const getContentsByType = async (req = request, res = response) => {
 // Dynamic query fot the type content
   const { limit = 10, since = 0 } = req.query
@@ -118,9 +132,10 @@ const getContentApprovedCreatedBy = async (req = request, res = response) => {
     contenidos
   ])
 }
+
 const getContentToBeApprovedCreatedBy = async (req = request, res = response) => {
   // Dynamic query for the editor who has approved the content
-  // Can visualize the content that has to be checked
+  // An author can visualize the content that has to be checked
   const { limit = 10, since = 0 } = req.query
   const query = { author: req.author, approved: false }
   // It runs simultaneously
@@ -180,18 +195,13 @@ const approveContent = async (req, res = response) => {
   // A content is approved when approved it's true
   const { id } = req.params
   // Every content includes an id that identifies it
-  const content = await Contenido.findByIdAndUpdate(id, { approved: req.approved })
+  const content = await Contenido.findByIdAndUpdate(id, { approved: true })
 
   res.json(content)
 }
 
-/* const deleteContent = async (req, res = response) => {
-  // Delete a content of the db
-
-  const { id } = req.params
-} */
-
 module.exports = {
+  contentsGet,
   getContentsByType,
   getContentsByTopic,
   getApprovedContents,

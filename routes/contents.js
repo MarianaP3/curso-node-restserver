@@ -1,8 +1,9 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
 
-const { validarCampos, validarSince, validarLimit } = require('../middlewares/validate-fields')
-const { contentExistsById, isTopicValid, isTypeValid, isTitleValid, isLinkValid, userExistsById } = require('../helpers/db-validators')
+const {
+  validarCampos, validarSince, validarLimit, contentExistsById, isTopicValid, isTypeValid, isTitleValid, isLinkValid, userExistsById
+} = require('../middlewares/index')
 
 const {
   getContentsByType,
@@ -20,8 +21,7 @@ const router = Router()
 router.get('/', [
   validarSince,
   validarLimit
-], getContentsByType, getContentsByTopic, getContentApprovedBy,
-getContentApprovedBy, getContentApprovedCreatedBy, getApprovedContents, getNotApprovedContents)
+], getContentsByType, getContentsByTopic, getContentApprovedBy, getContentApprovedCreatedBy, getApprovedContents, getNotApprovedContents)
 
 router.post('/', [
   // middlewares
@@ -34,9 +34,7 @@ router.post('/', [
   check('type').custom((type) => isTypeValid(type)),
   check('approved', 'El approved es obligatorio').not().isEmpty(),
   check('author', 'El autor es obligatorio').not().isEmpty(),
-  // revisar que el autor exista en la bd, crear middleware
   check('author').custom((author) => userExistsById(author)),
-  // check('image', 'La imagen es obligatoria').not().isEmpty()
   check('link').custom((link) => isLinkValid(link)),
   validarCampos
 ], contentsPost)
@@ -44,6 +42,7 @@ router.post('/', [
 router.put('/:id', [
   check('id', 'No es un ID válido').isMongoId(),
   check('id').custom(contentExistsById),
+  check('link').custom((link) => isLinkValid(link)),
   validarCampos
 ], contentsPut)
 

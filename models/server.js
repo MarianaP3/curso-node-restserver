@@ -8,13 +8,13 @@ class Server {
     this.port = process.env.PORT
     this.usuariosPath = '/api/usuarios'
     this.contenidosPath = '/api/contents'
-    // Conectar a base de datos
+    // Connect to the database
     this.conectarDB()
 
     // Middlewares
     this.middlewares()
 
-    // Rutas de mi applicación
+    // Routes of the app
     this.routes()
   }
 
@@ -26,10 +26,10 @@ class Server {
     // CORS
     this.app.use(express.static('public'))
 
-    // Lectura y Parseo del body
+    // Lecture of the body
     this.app.use(express.json())
 
-    // Directorio Público
+    // Public directory
     this.app.use(express.static('public'))
   }
 
@@ -45,4 +45,4 @@ class Server {
   }
 }
 
-module.exports = Server // exporta el servidor
+module.exports = Server // exports the server

@@ -1,14 +1,9 @@
 /* eslint-disable camelcase */
 const { response, request } = require('express')
 const bcryptjs = require('bcryptjs')
-// const { validationResult } = require('express-validator')
 
-// const Usuario = require('../models/user').default
 const Usuario = require('../models/user')
-
-// const { ValidarCampos, validarLimit, validarSince } = require('../middlewares/validate-fields')
-
-const usuariosGet = async (req = request, res = response) => { // la ruta se está estableciendo en server, al llamar
+const usuariosGet = async (req = request, res = response) => {
   const { limit = 5, since = 0 } = req.query
   const query = { status: true }
 
@@ -96,12 +91,6 @@ const usuariosPut = async (req, res = response) => {
   res.json(usuario)
 }
 
-const usuariosPatch = (req, res = response) => {
-  res.json({
-    msg: 'patch API - controlador '
-  })
-}
-
 const usuariosDelete = async (req, res = response) => {
   const { id } = req.params
   // It uses SOFT delete due to the established terms
@@ -114,7 +103,6 @@ module.exports = {
   usuariosGet,
   usuariosPost,
   usuariosPut,
-  usuariosPatch,
   usuariosDelete,
   getAuthorInfo
 }

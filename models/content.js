@@ -1,8 +1,5 @@
 /* eslint-disable camelcase */
 const { Schema, model } = require('mongoose')
-// const validateType = require('../models/type')
-// const validateTopic = require('../models/topic')
-// const UserId = require('../models/user')
 
 const ContentSchema = Schema({
   title: {
@@ -34,7 +31,6 @@ const ContentSchema = Schema({
     type: Boolean,
     default: false
   },
-  /* Approved by: String (not required if isn't approved) */
   approved_by: {
     type: Schema.Types.ObjectId,
     ref: 'User'
@@ -48,7 +44,6 @@ const ContentSchema = Schema({
 })
 
 ContentSchema.methods.toJSON = function () {
-  // const { __v } = this.toObject()
   const { __v, ...content } = this.toObject()
   return content
 }

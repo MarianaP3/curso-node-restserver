@@ -44,10 +44,6 @@ const isLinkValid = async (link = '') => {
   }
 }
 
-/**
- * Verify if a user exists by its ID.
- * @param {string} id ID del usuario.
- */
 const userExistsById = async (id) => {
   // Verify if the user exist by id
   const existeUsuario = await Usuario.findById(id)

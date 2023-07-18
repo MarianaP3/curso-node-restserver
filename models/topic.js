@@ -1,10 +1,11 @@
 const { Schema, model } = require('mongoose')
+const { TOPICS } = require('../constants')
 
 const TopicSchema = Schema({
   topic: {
     type: String,
     required: [true, 'El tema es obligatorio'],
-    enum: ['Saving', 'Inversion', 'Credit', 'FinancialLife']
+    enum: Object.values(TOPICS)
   }
 })
 

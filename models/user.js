@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 const { Schema, model } = require('mongoose')
 const { ROLES } = require('../constants')
-// const { appConfig } = require('../database/config')
 
 const UsuarioSchema = Schema({
   name: {
