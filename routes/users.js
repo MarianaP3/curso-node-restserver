@@ -9,9 +9,12 @@ const {
 const {
   usuariosGet,
   usuariosPost,
+  // eslint-disable-next-line no-unused-vars
   usuariosPatch,
   usuariosDelete,
-  usuariosPut
+  usuariosPut,
+  deactivateUsers,
+  activateUsers
 } = require('../controllers/usuarios')
 
 const router = Router()
@@ -52,7 +55,13 @@ router.put('/:id', [
   validarCampos
 ], usuariosPut)
 
-router.patch('/', usuariosPatch)
+// endpoints that uses 'updateMany'
+router.put('/', activateUsers, deactivateUsers)
+
+router.patch('/ruta', (req, res) => {
+  const mensaje = 'usersPatch'
+  res.send(mensaje)
+})
 
 router.delete('/:id', [
   check('id', 'No es un ID válido').isMongoId(),
