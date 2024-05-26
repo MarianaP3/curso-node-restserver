@@ -94,10 +94,30 @@ const usuariosDelete = async (req, res = response) => {
   res.json(usuario)
 }
 
+const deactivateUsers = async (req, res = response) => {
+  try {
+    await Usuario.collection.updateMany({}, { $set: { status: false } })
+    res.json('Usuarios desactivados')
+  } catch (error) {
+    res.json('No se pudieron desactivar los usuarios')
+  }
+}
+
+const activateUsers = async (req, res = response) => {
+  try {
+    await Usuario.collection.updateMany({}, { $set: { status: true } })
+    res.json('Usuarios activados')
+  } catch (error) {
+    res.json('No se pudieron activar los usuarios')
+  }
+}
+
 module.exports = {
   usuariosGet,
   usuariosPost,
   usuariosPut,
   usuariosDelete,
-  getAuthorInfo
+  getAuthorInfo,
+  deactivateUsers,
+  activateUsers
 }
