@@ -1,14 +1,14 @@
 const express = require('express')
-// const cors = require('cors')*
-
 const { dbConnection } = require('../database/config')
+
 class Server {
   constructor () {
     this.app = express()
     this.port = process.env.PORT || 3000
     this.usuariosPath = '/api/usuarios'
     this.contenidosPath = '/api/contents'
-    // Connect to the database
+
+    // Conectar a la base de datos
     this.conectarDB()
 
     // Middlewares
@@ -40,9 +40,9 @@ class Server {
 
   listen () {
     this.app.listen(this.port, () => {
-      console.log('Running server in port ', this.port)
+      console.log('Running server on port', this.port)
     })
   }
 }
 
-module.exports = Server // exports the server
+module.exports = Server

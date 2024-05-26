@@ -9,14 +9,21 @@ const TOPICS = {
   CREDIT: 'Credit',
   FINANCIAL_LIFE: 'FinancialLife'
 }
+const CATEGORIES = {
+  FOOD: 'food',
+  HEALTH: 'health',
+  TRANSPORT: 'transport',
+  ENTERTAINMENT: 'entertainment',
+  EDUCATION: 'education'
+}
 const TYPES = {
-  PODCAST: 'Podcast',
-  ARTICLE: 'Article',
-  CAPSULE: 'Capsule'
+  INCOME: 'income',
+  EXPENSE: 'expense'
 }
 
 module.exports = {
   ROLES,
   TOPICS,
-  TYPES
+  TYPES,
+  CATEGORIES
 }

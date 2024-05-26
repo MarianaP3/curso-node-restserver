@@ -1,44 +1,41 @@
 /* eslint-disable camelcase */
-const { Schema, model } = require('mongoose')
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../database/config')
 const { TOPICS } = require('../constants')
 
-const ContentSchema = Schema({
+const Content = sequelize.define('Content', {
   content_id: {
-    type: Number,
-    required: [true]
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
   },
   title: {
-    type: String,
-    required: [true, 'El titulo es obligatorio'],
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true
   },
   content: {
-    type: String,
-    required: [true, 'El desarrollo del contenido es obligatorio']
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   image: {
-    type: String
-  },
-  link: {
-    type: String,
-    unique: true
+    type: DataTypes.STRING
   },
   topic_id: {
-    type: String,
-    enum: Object.values(TOPICS),
-    required: true
+    type: DataTypes.ENUM(...Object.values(TOPICS)),
+    allowNull: false
   },
-  author: {
-    // Receive only the ID, it doesn´t include the complete author, it´s not neccesary
-    type: Schema.Types.ObjectId,
-    ref: 'User', // It refers to users collection
-    required: [true, 'El autor es obligatorio']
+  author_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Users', // Nombre de la tabla de usuarios
+      key: 'id'
+    }
   }
+}, {
+  tableName: 'Content',
+  timestamps: false // Deshabilitar timestamps si no los necesitas
 })
 
-ContentSchema.methods.toJSON = function () {
-  const { __v, ...content } = this.toObject()
-  return content
-}
-
-module.exports = model('Contenido', ContentSchema)
+module.exports = Content

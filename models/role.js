@@ -1,13 +1,17 @@
-import { Schema, model } from 'mongoose'
-import { ROLES } from '../constants'
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../database/config')
+const { ROLES } = require('../constants')
 
-const RoleSchema = Schema({
+const Role = sequelize.define('Role', {
   role: {
-    type: String,
-    required: [true, 'El rol es obligatorio'],
-    enum: Object.values(ROLES)
+    type: DataTypes.ENUM(...Object.values(ROLES)),
+    allowNull: false,
+    primaryKey: true
   }
+}, {
+  tableName: 'Roles',
+  timestamps: false
 })
 
-export default model('Role', RoleSchema)
+module.exports = Role
 

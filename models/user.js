@@ -1,46 +1,40 @@
 /* eslint-disable camelcase */
-const { Schema, model } = require('mongoose')
-const { ROLES } = require('../constants')
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../database/config')
 
-const UsuarioSchema = Schema({
+const User = sequelize.define('User', {
   user_id: {
-    type: Number,
-    required: [true]
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
   },
   name: {
-    type: String,
-    required: [true, 'El nombre es obligatorio']
+    type: DataTypes.STRING,
+    allowNull: false
   },
   last_name: {
-    type: String,
-    required: [true, 'El apellido es obligatorio']
+    type: DataTypes.STRING,
+    allowNull: false
   },
   email: {
-    type: String,
-    required: [true, 'El email es obligatorio'],
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true
   },
   password: {
-    type: String,
-    required: [true, 'La contraseña es obligatoria']
-  },
-  role: {
-    type: String,
-    enum: Object.values(ROLES)
+    type: DataTypes.STRING,
+    allowNull: false
   },
   about_user: {
-    type: String,
-    required: [true, 'La información sobre ti es obligatoria']
+    type: DataTypes.TEXT
   },
   status: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
+}, {
+  tableName: 'Users',
+  timestamps: false // Deshabilitar timestamps si no los necesitas
 })
 
-UsuarioSchema.methods.toJSON = function () {
-  const { __v, password, ...usuario } = this.toObject()
-  return usuario
-}
-
-module.exports = model('Usuario', UsuarioSchema)
+module.exports = User

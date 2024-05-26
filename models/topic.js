@@ -1,12 +1,16 @@
-const { Schema, model } = require('mongoose')
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../database/config')
 const { TOPICS } = require('../constants')
 
-const TopicSchema = Schema({
+const Topic = sequelize.define('Topic', {
   topic: {
-    type: String,
-    required: [true, 'El tema es obligatorio'],
-    enum: Object.values(TOPICS)
+    type: DataTypes.ENUM(...Object.values(TOPICS)),
+    allowNull: false,
+    primaryKey: true
   }
+}, {
+  tableName: 'Topics',
+  timestamps: false
 })
 
-module.exports = model('Topic', TopicSchema)
+module.exports = Topic

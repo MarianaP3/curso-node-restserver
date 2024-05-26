@@ -1,12 +1,16 @@
-const { Schema, model } = require('mongoose')
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../database/config')
 const { TYPES } = require('../constants')
 
-const TypeSchema = Schema({
+const Type = sequelize.define('Type', {
   type: {
-    type: String,
-    required: [true, 'El tipo es obligatorio'],
-    enum: Object.values(TYPES)
+    type: DataTypes.ENUM(...Object.values(TYPES)),
+    allowNull: false,
+    primaryKey: true
   }
+}, {
+  tableName: 'Types',
+  timestamps: false
 })
 
-module.exports = model('Type', TypeSchema)
+module.exports = Type
