@@ -20,22 +20,6 @@ const contentsGet = async (req = request, res = response) => {
     contenidos
   })
 }
-const getContentsByType = async (req = request, res = response) => {
-// Dynamic query fot the type content
-  const { limit = 10, since = 0 } = req.query
-  const query = { type: req.type }
-  // It runs simultaneously
-  const [total, contenidos] = await Promise.all([
-    Contenido.find(query)
-      .skip(since)
-      .limit(limit),
-    Contenido.countDocuments(query)
-  ])
-  res.json({
-    total,
-    contenidos
-  })
-}
 const getContentsByTopic = async (req = request, res = response) => {
   // Dynamic query for the topic content
   const { limit = 10, since = 0 } = req.query
@@ -51,38 +35,6 @@ const getContentsByTopic = async (req = request, res = response) => {
     contenidos
   })
 }
-const getApprovedContents = async (req = request, res = response) => {
-  // Query for the approved content
-  const { limit = 10, since = 0 } = req.query
-  const query = { approved: true }
-  // It runs simultaneously
-  const [total, contenidos] = await Promise.all([
-    Contenido.find(query)
-      .skip(since)
-      .limit(limit)
-  ])
-  res.json([
-    total,
-    contenidos
-  ])
-}
-
-const getNotApprovedContents = async (req = request, res = response) => {
-  // Query for the not approved content
-  const { limit = 10, since = 0 } = req.query
-  const query = { approved: false }
-  // It runs simultaneously
-  const [total, contenidos] = await Promise.all([
-    Contenido.find(query)
-      .skip(since)
-      .limit(limit)
-  ])
-  res.json([
-    total,
-    contenidos
-  ])
-}
-
 const getContentHiglight = async (req = request, res = response) => {
   // find a content by their id
   // const { id } = req.params
@@ -99,81 +51,21 @@ const getContentHiglight = async (req = request, res = response) => {
   })
 }
 
-const getContentApprovedBy = async (req = request, res = response) => {
-  // Dynamic query for the editor who has approved the content
-  const { limit = 10, since = 0 } = req.query
-  const query = { approvedBy: req.approved_by }
-  // It runs simultaneously
-  const [total, contenidos] = await Promise.all([
-    Contenido.find(query)
-      .skip(since)
-      .limit(limit)
-  ])
-  res.json([
-    total,
-    contenidos
-  ])
-}
-
-// AUTHOR PAGE
-const getContentApprovedCreatedBy = async (req = request, res = response) => {
-  // Query for the author who has created the content
-  // Can visualize their content approved
-  const { limit = 10, since = 0 } = req.query
-  const query = { author: req.author, approved: true }
-  // It runs simultaneously
-  const [total, contenidos] = await Promise.all([
-    Contenido.find(query)
-      .skip(since)
-      .limit(limit)
-  ])
-  res.json([
-    total,
-    contenidos
-  ])
-}
-
-const getContentToBeApprovedCreatedBy = async (req = request, res = response) => {
-  // Dynamic query for the editor who has approved the content
-  // An author can visualize the content that has to be checked
-  const { limit = 10, since = 0 } = req.query
-  const query = { author: req.author, approved: false }
-  // It runs simultaneously
-  const [total, contenidos] = await Promise.all([
-    Contenido.find(query)
-      .skip(since)
-      .limit(limit)
-  ])
-  res.json([
-    total,
-    contenidos
-  ])
-}
-
 async function contentsPost (req, res = response) {
   const {
     title,
     content,
     image,
-    link,
     topic,
-    type,
-    approved,
-    approved_by,
-    author
-
+    editor
   } = req.body
 
   const contenido = new Contenido({
     title,
     content,
     image,
-    link,
     topic,
-    type,
-    approved,
-    approved_by,
-    author
+    editor
   })
   await contenido.save()
   res.json({
@@ -191,26 +83,38 @@ const contentsPut = async (req, res = response) => {
   res.json(contenido)
 }
 
-const approveContent = async (req, res = response) => {
-  // A content is approved when approved it's true
+const contentDelete = async (req, res = response) => {
   const { id } = req.params
-  // Every content includes an id that identifies it
-  const content = await Contenido.findByIdAndUpdate(id, { approved: true })
 
-  res.json(content)
+  try {
+    // Buscar y eliminar el contenido por su ID
+    const contenido = await Contenido.findByIdAndDelete(id)
+
+    // Si el contenido no existe, responder con un error
+    if (!contenido) {
+      return res.status(404).json({
+        msg: 'Content not found'
+      })
+    }
+
+    // Responder con el contenido eliminado
+    res.json({
+      msg: 'Content deleted successfully',
+      contenido
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({
+      msg: 'Error deleting content'
+    })
+  }
 }
 
 module.exports = {
+  contentDelete,
   contentsGet,
-  getContentsByType,
   getContentsByTopic,
-  getApprovedContents,
-  getNotApprovedContents,
   getContentHiglight,
-  getContentApprovedBy,
-  getContentApprovedCreatedBy,
-  getContentToBeApprovedCreatedBy,
   contentsPost,
-  contentsPut,
-  approveContent
+  contentsPut
 }

@@ -9,8 +9,6 @@ const {
 const {
   usuariosGet,
   usuariosPost,
-  // eslint-disable-next-line no-unused-vars
-  usuariosPatch,
   usuariosDelete,
   usuariosPut,
   deactivateUsers,

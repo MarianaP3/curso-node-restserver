@@ -6,14 +6,10 @@ const {
 } = require('../middlewares/index')
 
 const {
-  getContentsByType,
   getContentsByTopic,
-  getContentApprovedBy,
-  getContentApprovedCreatedBy,
-  getApprovedContents,
-  getNotApprovedContents,
   contentsPost,
-  contentsPut
+  contentsPut,
+  contentDelete
 } = require('../controllers/contenidos')
 
 const router = Router()
@@ -21,7 +17,12 @@ const router = Router()
 router.get('/', [
   validarSince,
   validarLimit
-], getContentsByType, getContentsByTopic, getContentApprovedBy, getContentApprovedCreatedBy, getApprovedContents, getNotApprovedContents)
+], getContentsByTopic)
+
+router.delete('/:id', [
+  check('id', 'No es un ID válido').isMongoId(),
+  check('id').custom(contentExistsById)
+], contentDelete)
 
 router.post('/', [
   // middlewares

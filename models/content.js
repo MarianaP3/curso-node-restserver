@@ -3,6 +3,10 @@ const { Schema, model } = require('mongoose')
 const { TOPICS } = require('../constants')
 
 const ContentSchema = Schema({
+  content_id: {
+    type: Number,
+    required: [true]
+  },
   title: {
     type: String,
     required: [true, 'El titulo es obligatorio'],
