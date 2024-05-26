@@ -36,7 +36,6 @@ router.post('/', [
   check('password', 'La contraseña es obligatoria').not().isEmpty(),
   check('password', 'La contraseña debe tener al menos 8 caracteres').isLength({ min: 8 }),
   check('role', 'No es un rol válido').isIn(ROLES),
-  check('occupation', 'La ocupación es obligatoria').not().isEmpty(),
   check('about_user', 'La información sobre ti es obligatoria').not().isEmpty(),
   validarCampos
 ], usuariosPost)
@@ -47,7 +46,6 @@ router.put('/:id', [
   check('email', 'El correo es obligatorio').not().isEmpty(),
   check('id', 'No es un ID válido').isMongoId(),
   check('id').custom(userExistsById),
-  check('occupation', 'La ocupación es obligatoria').not().isEmpty(),
   check('about_user', 'La información sobre ti es obligatoria').not().isEmpty(),
   validarCampos
 ], usuariosPut)

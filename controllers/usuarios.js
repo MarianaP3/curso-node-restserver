@@ -24,16 +24,15 @@ const usuariosGet = async (req = request, res = response) => {
 const getAuthorInfo = async (req = request, res = response) => {
   // find an author by their id
   // const { id } = req.params
-  const { __id, name, occupation, img, about_user/* , ...resto */ } = req.body
+  const { __id, name, last_name, about_user/* , ...resto */ } = req.body
 
-  // extracts a fragment of about 50 characters of "about user" information
-  const aboutUserFragment = about_user.substring(0, 50)
+  // extracts a fragment of about 300 characters of "about user" information
+  const aboutUserFragment = about_user.substring(0, 300)
 
   res.json({
     __id,
     name,
-    occupation,
-    img,
+    last_name,
     about_user: aboutUserFragment
   })
 }
@@ -45,9 +44,7 @@ async function usuariosPost (req, res = response) {
     email,
     password,
     role,
-    occupation,
     about_user,
-    img,
     status
   } = req.body
 
@@ -57,9 +54,7 @@ async function usuariosPost (req, res = response) {
     email,
     password,
     role,
-    occupation,
     about_user,
-    img,
     status
   })
 

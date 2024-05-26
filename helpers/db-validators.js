@@ -52,11 +52,11 @@ const userExistsById = async (id) => {
   }
 }
 
-const userIsAnAuthorById = async (id) => {
+const userIsAnEditorById = async (id) => {
   // Verify if the user is an Author by their ID
   userExistsById(id)
   const usuario = await Usuario.findById(id)
-  if (usuario.role !== ROLES.AUTHOR) {
+  if (usuario.role !== ROLES.EDITOR) {
     throw new Error('El usuario de id: ' + id + ' no es un autor')
   }
 }
@@ -72,7 +72,7 @@ const contentExistsById = async (id) => {
 module.exports = { // exports an object
   isEmailValid,
   userExistsById,
-  userIsAnAuthorById,
+  userIsAnAuthorById: userIsAnEditorById,
   contentExistsById,
   isTopicValid,
   isTypeValid,

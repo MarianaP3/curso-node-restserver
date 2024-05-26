@@ -1,5 +1,6 @@
 const ROLES = {
-  AUTHOR: 'Author',
+  READER: 'Reader',
+  STUDENT: 'Student',
   EDITOR: 'Editor'
 }
 const TOPICS = {

@@ -3,6 +3,10 @@ const { Schema, model } = require('mongoose')
 const { ROLES } = require('../constants')
 
 const UsuarioSchema = Schema({
+  user_id: {
+    type: Number,
+    required: [true]
+  },
   name: {
     type: String,
     required: [true, 'El nombre es obligatorio']
@@ -22,20 +26,11 @@ const UsuarioSchema = Schema({
   },
   role: {
     type: String,
-    required: [true, 'El rol es obligatorio'],
     enum: Object.values(ROLES)
-  },
-  occupation: {
-    type: String,
-    required: [true, 'La ocupación es obligatoria']
   },
   about_user: {
     type: String,
     required: [true, 'La información sobre ti es obligatoria']
-  },
-  img: {
-    type: String
-    // required: [true, 'La fotografía es requerida']
   },
   status: {
     type: Boolean,

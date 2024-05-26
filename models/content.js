@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 const { Schema, model } = require('mongoose')
+const { TOPICS } = require('../constants')
 
 const ContentSchema = Schema({
   title: {
@@ -16,24 +17,12 @@ const ContentSchema = Schema({
   },
   link: {
     type: String,
-    required: [true, 'El enlace al contenido es obligatoria'],
     unique: true
   },
-  topic: {
+  topic_id: {
     type: String,
+    enum: Object.values(TOPICS),
     required: true
-  },
-  type: {
-    type: String,
-    required: true
-  },
-  approved: {
-    type: Boolean,
-    default: false
-  },
-  approved_by: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
   },
   author: {
     // Receive only the ID, it doesn´t include the complete author, it´s not neccesary
